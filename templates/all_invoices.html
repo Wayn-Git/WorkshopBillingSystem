@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Workshop History</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <nav class="bg-slate-900 text-white p-4 shadow-xl mb-10">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-tight text-emerald-400">WORKSHOP<span class="text-white">PRO</span></h1>
+            <a href="/" class="bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded text-sm font-medium transition-all">+ New Invoice</a>
+        </div>
+    </nav>
+
+    <div class="max-w-5xl mx-auto px-4">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="p-5 text-xs font-black text-slate-400 uppercase tracking-widest">Inv #</th>
+                        <th class="p-5 text-xs font-black text-slate-400 uppercase tracking-widest">Customer</th>
+                        <th class="p-5 text-xs font-black text-slate-400 uppercase tracking-widest text-right">Total Amount</th>
+                        <th class="p-5 text-xs font-black text-slate-400 uppercase tracking-widest text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    {% for row in invoices %}
+                    <tr class="hover:bg-slate-50/50 transition">
+                        <td class="p-5 font-mono text-sm font-bold text-emerald-600">{{ row.invoice_number }}</td>
+                        <td class="p-5">
+                            <div class="font-bold text-slate-800">{{ row.customer_name }}</div>
+                            <div class="text-xs text-slate-400">Delivered: {{ row.delivery_date or 'N/A' }}</div>
+                        </td>
+                        <td class="p-5 text-right font-black text-slate-900">₹{{ "%.2f"|format(row.total_amount) }}</td>
+                        <td class="p-5 text-center">
+                            <a href="/invoice/{{ row.id }}" class="inline-block text-xs font-bold text-emerald-600 bg-emerald-50 px-4 py-2 rounded-lg hover:bg-emerald-600 hover:text-white transition">View Bill</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

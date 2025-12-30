@@ -2,12 +2,15 @@ from .connection import get_db
 
 def add_customer(name, gst_no, phone):
     conn = get_db()
-    conn.execute(
+    cur = conn.cursor()
+    cur.execute(
         "INSERT INTO customer (name, gst_no, phone) VALUES (?, ?, ?)",
         (name, gst_no, phone)
     )
+    customer_id = cur.lastrowid # CRITICAL: Return the new ID
     conn.commit()
     conn.close()
+    return customer_id
 
 def get_customer(customer_id):
     conn = get_db()

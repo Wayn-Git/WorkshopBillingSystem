@@ -1,92 +1,149 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice #{{ invoice.invoice_number }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
         @media print {
-            .no-print { display: none; }
-            body { background: white; padding: 0; }
-            .shadow-lg { shadow: none; }
+            /* Hide everything that is not the invoice */
+            .no-print {
+                display: none !important;
+            }
+            
+            /* Remove background colors and shadows for print */
+            body {
+                background-color: white !important;
+                padding: 0 !important;
+            }
+
+            .invoice-container {
+                box-shadow: none !important;
+                border: none !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            /* Ensure text is black for clear printing */
+            * {
+                color: black !important;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-100 p-10">
-    <div class="max-w-3xl mx-auto bg-white p-10 shadow-lg rounded-sm border border-gray-200" id="printable">
-        <div class="flex justify-between items-start mb-8">
+<body class="bg-gray-50 p-4 md:p-12 text-gray-900">
+
+    <div class="max-w-3xl mx-auto bg-white p-8 md:p-16 shadow-sm border border-gray-100 invoice-container">
+        
+        <div class="flex justify-between items-start border-b border-gray-900 pb-8 mb-8">
             <div>
-                <h1 class="text-4xl font-black text-blue-600 uppercase tracking-tighter">{{ workshop.name }}</h1>
-                <p class="text-gray-500 whitespace-pre-line">{{ workshop.address }}</p>
-                <p class="font-bold text-sm mt-2">GSTIN: {{ workshop.gst_no }}</p>
+                <h1 class="text-3xl font-bold tracking-tighter uppercase mb-2">{{ workshop.name }}</h1>
+                <p class="text-sm text-gray-600 leading-relaxed max-w-xs">
+                    {{ workshop.address }}
+                </p>
+                <p class="text-sm font-semibold mt-2">GSTIN: {{ workshop.gst_no }}</p>
             </div>
             <div class="text-right">
-                <h2 class="text-2xl font-bold text-gray-400">INVOICE</h2>
-                <p class="text-gray-600">No: <span class="text-black font-semibold">{{ invoice.invoice_number }}</span></p>
-                <p class="text-gray-600 text-sm">Date: {{ invoice.created_at or 'Today' }}</p>
+                <h2 class="text-5xl font-light text-gray-200 uppercase tracking-widest mb-4">Invoice</h2>
+                <div class="space-y-1 text-sm">
+                    <p><span class="text-gray-500">Invoice No:</span> <span class="font-semibold">{{ invoice.invoice_number }}</span></p>
+                    <p><span class="text-gray-500">Date:</span> <span class="font-semibold">{{ invoice.invoice_date or '30-12-2025' }}</span></p>
+                    {% if invoice.delivery_date %}
+                    <p><span class="text-gray-500">Delivery:</span> <span class="font-semibold">{{ invoice.delivery_date }}</span></p>
+                    {% endif %}
+                </div>
             </div>
         </div>
 
-        <div class="mb-8 border-b pb-4">
-            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Bill To</h3>
-            <p class="text-lg font-bold">{{ invoice.customer_name }}</p>
-            <p class="text-gray-600">{{ invoice.phone }}</p>
+        <div class="grid grid-cols-2 gap-8 mb-12">
+            <div>
+                <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Bill To</h3>
+                <p class="text-lg font-bold">{{ invoice.customer_name }}</p>
+                <p class="text-gray-600">Phone: {{ invoice.phone }}</p>
+            </div>
         </div>
 
         <table class="w-full text-left mb-8">
             <thead>
-                <tr class="border-b-2 border-gray-800">
-                    <th class="py-2 text-sm uppercase">Service</th>
-                    <th class="py-2 text-sm uppercase text-right">Price</th>
-                    <th class="py-2 text-sm uppercase text-right">GST %</th>
-                    <th class="py-2 text-sm uppercase text-right">Total</th>
+                <tr class="border-b-2 border-gray-900">
+                    <th class="py-3 text-xs font-bold uppercase tracking-wider">Description</th>
+                    <th class="py-3 text-right text-xs font-bold uppercase tracking-wider">Price</th>
+                    <th class="py-3 text-right text-xs font-bold uppercase tracking-wider">GST %</th>
+                    <th class="py-3 text-right text-xs font-bold uppercase tracking-wider">Total</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y divide-gray-100">
                 {% for s in services %}
-                <tr class="border-b">
-                    <td class="py-3 font-medium">{{ s.service_name }}</td>
-                    <td class="py-3 text-right">₹{{ s.price }}</td>
-                    <td class="py-3 text-right text-gray-500">{{ s.gst_percent }}%</td>
-                    <td class="py-3 text-right font-semibold">₹{{ "%.2f"|format(s.price * (1 + s.gst_percent/100)) }}</td>
+                <tr>
+                    <td class="py-4 font-medium">{{ s.service_name }}</td>
+                    <td class="py-4 text-right">₹{{ "%.2f"|format(s.price) }}</td>
+                    <td class="py-4 text-right text-gray-500">{{ s.gst_percent }}%</td>
+                    <td class="py-4 text-right font-bold text-gray-900">
+                        ₹{{ "%.2f"|format(s.price * (1 + s.gst_percent/100)) }}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
 
-        <div class="flex justify-end">
-            <div class="w-64">
-                <div class="flex justify-between py-1">
-                    <span>Subtotal:</span>
+        <div class="flex justify-end mb-12">
+            <div class="w-full max-w-xs space-y-3">
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Subtotal</span>
                     <span>₹{{ invoice.subtotal }}</span>
                 </div>
-                <div class="flex justify-between py-1 text-gray-600">
-                    <span>GST:</span>
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">GST Amount</span>
                     <span>₹{{ invoice.gst_amount }}</span>
                 </div>
-                <div class="flex justify-between py-2 border-t-2 border-gray-800 mt-2 font-bold text-xl">
-                    <span>Total:</span>
+                <div class="flex justify-between text-xl font-bold border-t border-gray-900 pt-3">
+                    <span>Total Amount</span>
                     <span>₹{{ invoice.total_amount }}</span>
                 </div>
             </div>
         </div>
 
-        <div class="mt-12 bg-gray-50 p-4 rounded">
-            <h4 class="text-xs font-bold uppercase text-gray-400 mb-2">Payment History</h4>
-            {% for p in payments %}
-            <div class="text-sm flex justify-between">
-                <span>{{ p.payment_mode }} ({{ p.payment_type }})</span>
-                <span class="font-bold">₹{{ p.amount }}</span>
+        <div class="border-t border-gray-100 pt-8 mt-8">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Payment History</h3>
+            <div class="space-y-2">
+                {% for p in payments %}
+                <div class="flex justify-between text-sm">
+                    <span>{{ p.payment_mode }} ({{ p.payment_type }})</span>
+                    <span class="font-semibold">₹{{ p.amount }}</span>
+                </div>
+                {% endfor %}
+                
+                {% if payment_due and payment_due > 0 %}
+                <div class="flex justify-between text-lg font-bold bg-gray-50 p-4 mt-4 border-l-4 border-gray-900">
+                    <span class="uppercase tracking-tight">Amount Due</span>
+                    <span>₹{{ "%.2f"|format(payment_due) }}</span>
+                </div>
+                {% endif %}
             </div>
-            {% endfor %}
         </div>
 
-        <div class="mt-12 text-center text-gray-400 text-xs">
-            Thank you for your business!
+        <div class="text-center mt-16 pt-8 border-t border-gray-100">
+            <p class="text-sm font-medium">Thank you for your business!</p>
+            <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest italic">Authorized Signatory</p>
         </div>
     </div>
 
-    <div class="max-w-3xl mx-auto mt-6 flex justify-center no-print">
-        <button onclick="window.print()" class="bg-gray-800 text-white px-8 py-2 rounded shadow-md hover:bg-black">Print Invoice</button>
+    <div class="max-w-3xl mx-auto mt-8 flex flex-col sm:flex-row gap-4 no-print">
+        <button onclick="window.print()" class="flex-1 bg-gray-900 text-white font-bold py-4 rounded hover:bg-black transition-all uppercase tracking-widest text-xs">
+            Print Invoice
+        </button>
+        <a href="/" class="flex-1 bg-white text-gray-900 border border-gray-900 font-bold py-4 rounded text-center hover:bg-gray-50 transition-all uppercase tracking-widest text-xs">
+            Back to Dashboard
+        </a>
     </div>
+
 </body>
 </html>

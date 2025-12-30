@@ -2,85 +2,85 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Invoice</title>
+    <title>Workshop Billing - Create</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 p-8">
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md">
-        <h2 class="text-3xl font-bold text-gray-800 mb-6">Create New Invoice</h2>
-        
-        <form method="POST" action="/create-invoice" id="invoiceForm">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Customer Name</label>
-                    <input type="text" name="customer_name" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Phone Number</label>
-                    <input type="text" name="phone" class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                </div>
-            </div>
+<body class="bg-slate-50 min-h-screen font-sans">
+    <nav class="bg-slate-900 text-white p-4 shadow-xl mb-10">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-tight text-emerald-400">WORKSHOP<span class="text-white">PRO</span></h1>
+            <a href="/history" class="bg-slate-800 hover:bg-emerald-600 px-4 py-2 rounded text-sm font-medium transition-all">Billing History</a>
+        </div>
+    </nav>
 
-            <div class="mb-6">
-                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Services</h3>
-                <div id="service-rows">
-                    <div class="grid grid-cols-12 gap-4 mb-4 items-end service-row">
-                        <div class="col-span-6">
-                            <label class="text-xs font-bold text-gray-500 uppercase">Description</label>
-                            <input type="text" name="service_name[]" required class="block w-full border border-gray-300 rounded-md p-2">
-                        </div>
-                        <div class="col-span-3">
-                            <label class="text-xs font-bold text-gray-500 uppercase">Price (₹)</label>
-                            <input type="number" name="price[]" required class="block w-full border border-gray-300 rounded-md p-2">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="text-xs font-bold text-gray-500 uppercase">GST %</label>
-                            <input type="number" name="gst_percent[]" value="18" class="block w-full border border-gray-300 rounded-md p-2">
-                        </div>
-                        <div class="col-span-1">
-                            <button type="button" onclick="removeRow(this)" class="text-red-500 hover:text-red-700 font-bold p-2">✕</button>
+    <main class="max-w-4xl mx-auto px-4 pb-12">
+        <form method="POST" action="/create-invoice" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-8 border-b border-slate-100 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-slate-800">New Invoice</h2>
+                <span class="text-slate-400 text-sm">Fill in details to generate receipt</span>
+            </div>
+            
+            <div class="p-8 space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="space-y-1">
+                        <label class="text-xs font-black text-slate-400 uppercase tracking-wider">Customer Name</label>
+                        <input type="text" name="customer_name" required class="w-full p-3 bg-slate-50 border-slate-200 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-black text-slate-400 uppercase tracking-wider">Phone Number</label>
+                        <input type="text" name="phone" class="w-full p-3 bg-slate-50 border-slate-200 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-black text-slate-400 uppercase tracking-wider">Delivery Date</label>
+                        <input type="date" name="delivery_date" class="w-full p-3 bg-slate-50 border-slate-200 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition">
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-bold text-slate-700">Services & Spare Parts</h3>
+                        <button type="button" onclick="addService()" class="text-emerald-600 text-sm font-bold hover:text-emerald-700">+ Add Item</button>
+                    </div>
+                    <div id="service-list" class="space-y-3">
+                        <div class="grid grid-cols-12 gap-3 service-row animate-in fade-in slide-in-from-top-2">
+                            <input type="text" name="service_name[]" placeholder="Description" class="col-span-6 p-3 border rounded-xl" required>
+                            <input type="number" name="price[]" placeholder="Price" class="col-span-3 p-3 border rounded-xl" required>
+                            <input type="number" name="gst_percent[]" value="18" class="col-span-2 p-3 border rounded-xl">
+                            <button type="button" onclick="this.parentElement.remove()" class="col-span-1 text-slate-300 hover:text-red-500 transition">✕</button>
                         </div>
                     </div>
                 </div>
-                <button type="button" onclick="addServiceRow()" class="mt-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition">+ Add Service</button>
-            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 bg-blue-50 p-4 rounded-lg">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Payment Mode</label>
-                    <select name="payment_mode" class="mt-1 block w-full border border-gray-300 rounded-md p-2 bg-white">
-                        <option value="Cash">Cash</option>
-                        <option value="UPI">UPI</option>
-                        <option value="Card">Card</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Payment Status</label>
-                    <select name="payment_type" class="mt-1 block w-full border border-gray-300 rounded-md p-2 bg-white">
-                        <option value="Advance">Advance</option>
-                        <option value="Final">Final</option>
-                    </select>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                    <div class="space-y-1">
+                        <label class="text-xs font-black text-emerald-600 uppercase tracking-wider">Payment Mode</label>
+                        <select name="payment_mode" class="w-full p-3 bg-white border border-slate-200 rounded-xl">
+                            <option>Cash</option><option>UPI</option><option>Card</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-black text-emerald-600 uppercase tracking-wider">Payment Status</label>
+                        <select name="payment_type" class="w-full p-3 bg-white border border-slate-200 rounded-xl">
+                            <option>Advance</option><option>Final</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-lg">Generate Invoice</button>
+            <div class="p-8 bg-slate-50 border-t border-slate-100">
+                <button type="submit" class="w-full bg-slate-900 hover:bg-emerald-600 text-white font-bold py-4 rounded-2xl shadow-lg transition-all transform active:scale-[0.98]">
+                    Generate & View Receipt
+                </button>
+            </div>
         </form>
-    </div>
+    </main>
 
     <script>
-        function addServiceRow() {
-            const container = document.getElementById('service-rows');
+        function addService() {
+            const container = document.getElementById('service-list');
             const row = document.querySelector('.service-row').cloneNode(true);
-            row.querySelectorAll('input').forEach(input => input.value = input.name === 'gst_percent[]' ? '18' : '');
+            row.querySelectorAll('input').forEach(i => i.value = i.name === 'gst_percent[]' ? '18' : '');
             container.appendChild(row);
-        }
-
-        function removeRow(btn) {
-            const rows = document.querySelectorAll('.service-row');
-            if (rows.length > 1) {
-                btn.closest('.service-row').remove();
-            }
         }
     </script>
 </body>
