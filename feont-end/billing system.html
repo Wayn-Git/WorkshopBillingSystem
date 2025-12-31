@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice Generator</title>
+
+    <!-- Bootstrap 4.5 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="invoice-box">
+            <h2 class="invoice-title">Bhairavnath Enterprises</h2>
+            <p class="text-center">ALL TYPES ROTARY GRINDING AND TOOL ROOM MILLING TURNING DRILLING AND JOB WORK</p>
+            <hr />
+            <p class="text-center">pap / J.4, near sanket hotel M .I .D .C , indrayninagar, bhosari, pune - 411 026, <span style="font-weight: bold;">Mob: 9371020269</span></p>
+            <div class="pt-5 text-right">
+                <p>
+                    <strong>Date:</strong> <input type="date">
+                </p>
+            </div>
+            <div class="pb-5 text-right">
+                <p>
+                    <strong>Delivery-Date:</strong> <input type="date">
+                </p>
+            </div>
+            <div class="row mb-4">
+                <div class=" flex-column order- col-md-6">
+                    <p class="d-flex order-md-1 order-1 flex-column">
+                        <strong>Billed To:</strong><br>
+                        <input type=" text" class="form-control mb-2" placeholder="Client Name">
+                        <input type="text" class="form-control mb-2" placeholder="ph. ">
+                        <input type="text" class="form-control mb-2" placeholder="Client CH.no ">
+                        <input type="text" class="form-control mb-2" placeholder="GST. ">
+                    </p>
+                </div>
+
+                <div class="d-flex flex-column order-md-2 order-2 col-md-6">
+                    <strong>Billed by:</strong><br>
+                    <p><input type="text" class="form-control mb-2" placeholder="owner name / company ">
+                        <input type="text" class="form-control mb-2" placeholder="invoice no. ">
+                        <input type="text" class="form-control mb-2" placeholder="Our CH.no ">
+                        <input type="text" class="form-control mb-2" placeholder="Our GST ">
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-12 d-flex  text-center">
+                <p><input type="text" class=" in-box  mb-2" placeholder="P.O no. "></p>
+                <p class="ml-2">
+                    <strong>Date:</strong> <input type="date">
+                </p>
+            </div>
+
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Service</th>
+                        <th width="150">Quantity</th>
+                        <th width="100">Rate</th>
+                        <th width="100">Amount <br />rs</th>
+                        <th width="100">delete</th>
+                    </tr>
+                </thead>
+
+                <tbody id="serviceTable">
+                    <tr>
+                        <td><input type="text" class="form-control" placeholder="Service name"></td>
+                        <td><input type="number" class="form-control qty" placeholder="0" oninput="calculateRow(this)"></td>
+                        <td><input type="number" class="form-control rate" placeholder="0" oninput="calculateRow(this)"></td>
+                        <td><input type="number" class="form-control amount" placeholder="0" readonly></td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="removeRow(this)">X</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button class="btn btn-primary mb-3" onclick="addRow()">+ Add Service</button>
+
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6 text-right">
+                    <p class="total-box">Total: <span id="totalAmount">0</span> Rs</p>
+                </div>
+            </div>
+
+            <hr>
+
+            <h2> BHAIRAVNATH ENTERPRIZES </h2>
+            <p>
+                labour charge only:<input type="text" class="form-control mb-2" placeholder="labour charge"><br>
+                AUTHORISED SIGN :
+            </p>
+            <h5 class="text-right mt-4">Thank You!</h5>
+        </div>
+
+        <div class="print-card d-flex mb-5 justify-content-center flex-row">
+            <div class="text-center m-2">
+                <button class="btn btn-warning text-white">Print</button>
+            </div>
+            <div class="text-center m-2">
+                <button class="btn btn-dark">Dashbord</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addRow() {
+            const table = document.getElementById("serviceTable");
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+            <td><input type="text" class="form-control" placeholder="Service name"></td>
+            <td><input type="number" class="form-control qty" value="0" oninput="calculateRow(this)"></td>
+            <td><input type="number" class="form-control rate" value="0" oninput="calculateRow(this)"></td>
+            <td><input type="number" class="form-control amount" value="0" readonly></td>
+            <td>
+                <button class="btn btn-danger btn-sm" onclick="removeRow(this)">X</button>
+            </td>
+        `;
+            table.appendChild(row);
+        }
+
+        function removeRow(button) {
+            button.closest("tr").remove();
+            calculateTotal();
+        }
+
+        function calculateRow(input) {
+            const row = input.closest("tr");
+
+            const qty = Number(row.querySelector(".qty").value) || 0;
+            const rate = Number(row.querySelector(".rate").value) || 0;
+            const amountInput = row.querySelector(".amount");
+
+            amountInput.value = (qty * rate).toFixed(2);
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            let total = 0;
+            document.querySelectorAll(".amount").forEach(input => {
+                total += Number(input.value) || 0;
+            });
+            document.getElementById("totalAmount").innerText = total.toFixed(2);
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Caveat:wght@400;700&family=Lobster&family=Monoton&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display+SC:ital,wght@0,400;0,700;1,700&family=Playfair+Display:ital,wght@0,400;0,700;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,700&family=Work+Sans:ital,wght@0,400;0,700;1,700&display=swap');
+
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+.invoice-box {
+    background: #ffffff;
+    padding: 30px;
+    margin-top: 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.invoice-title {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+
+}
+
+.print-card {
+    background: #ffffff;
+    padding: 30px;
+    margin-top: 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+}
+
+.total-box {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+hr {
+    border-width: 5px;
+    border-color: black;
+}
+
+.in-box {
+    width: 425px;
+    border-style: solid;
+    border-color: gray;
+    border-radius: 5px;
+    border-width: 1px;
+    padding: 5px;
+}
