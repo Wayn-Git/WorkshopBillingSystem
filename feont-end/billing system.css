@@ -59,3 +59,12 @@ hr {
     border-width: 1px;
     padding: 5px;
 }
+.dash-card {
+    border-style: solid;
+    border-color: black;
+    border-radius: 15px;
+    text-align: center;
+    padding: 10px;
+    color: #ffffff;
+    font-family: "Roboto";
+}

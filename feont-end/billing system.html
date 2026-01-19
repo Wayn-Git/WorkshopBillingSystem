@@ -14,6 +14,25 @@
 
 <body>
 
+<div id="sectiondashboard">
+    <div class="container mt-5  dash-container">
+        <div class="row">
+            <h1 style="font-family: roboto; font-weight: bold; color: dark;" class="pt-4 text-center">Wellcome to the invoice generator</h1>
+            <div class="col-12">
+                <div class="dash-card pt-3 m-3">
+                    <h1 style=" color: blue; font-weight: bold;">Check History</h1>
+                    <button class="mt-4 btn btn-primary">View details</button>
+                </div>
+                <div class=" dash-card pt-3 m-3">
+                    <h1 class="text-warning " style="font-weight: bold;">generate invoice</h1>
+                    <button onclick="display('sectiongenerateinvoice')" class="btn mt-4 btn-warning">View details</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="sectiongenerateinvoice">
     <div class="container">
         <div class="invoice-box">
             <h2 class="invoice-title text-center">Bhairavnath Enterprises</h2>
@@ -105,7 +124,7 @@
                 <button class="btn btn-warning text-white">Print</button>
             </div>
             <div class="text-center m-2">
-                <button class="btn btn-dark">Dashbord</button>
+                <button class="btn btn-dark" onclick="display('sectiondashboard')">Dashbord</button>
             </div>
         </div>
     </div>
@@ -151,6 +170,8 @@
             document.getElementById("totalAmount").innerText = total.toFixed(2);
         }
     </script>
+</div>
+<script type="text/javascript" src="https://new-assets.ccbp.in/frontend/content/static-ccbp-ui-kit/static-ccbp-ui-kit.js"></script>
 
 </body>
 
